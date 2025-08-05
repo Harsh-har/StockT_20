@@ -22,7 +22,7 @@ class LoginScreen extends StatelessWidget {
               children: [
                 const SizedBox(height: 30),
                 Image.asset(
-                  'assets/bat_icon.png',
+                  'assets/images/iconsplash.png',
                   height: 100,
                 ),
                 const SizedBox(height: 30),
@@ -110,9 +110,9 @@ class LoginScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _socialButton("assets/google.png"),
-                    _socialButton("assets/facebook.png"),
-                    _socialButton("assets/twitter.png"),
+                    _socialButton("assets/images/googleicon.png"),
+                    _socialButton("assets/images/facebookicon.png"),
+                    _socialButton("assets/images/twittericon.png"),
                   ],
                 ),
 

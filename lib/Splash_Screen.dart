@@ -32,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
             Column(
               children: [
                 Image.asset(
-                  'assets/bat_icon.png',
+                  'assets/images/iconsplash.png',
                   height: 130,
                 ),
                 const SizedBox(height: 30),
