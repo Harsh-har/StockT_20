@@ -1,8 +1,62 @@
 import 'package:flutter/material.dart';
-import 'package:yaaara/Home_Screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:yaaara/Otpverification_Screen.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final phoneController = TextEditingController();
+  bool isLoading = false;
+
+  void sendOTP() async {
+    String phone = phoneController.text.trim();
+
+    if (phone.isEmpty || phone.length < 10) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Enter a valid phone number")),
+      );
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    await FirebaseAuth.instance.verifyPhoneNumber(
+      phoneNumber: phone,
+      verificationCompleted: (PhoneAuthCredential credential) {
+        // Optional: Auto verification for some devices
+      },
+      verificationFailed: (FirebaseAuthException e) {
+        setState(() {
+          isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Verification failed: ${e.message}")),
+        );
+      },
+      codeSent: (String verificationId, int? resendToken) {
+        setState(() {
+          isLoading = false;
+        });
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => OtpVerificationScreen(
+              phoneNumber: phone,
+              verificationId: verificationId,
+            ),
+          ),
+        );
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {},
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,92 +75,52 @@ class LoginScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 30),
-                Image.asset(
-                  'assets/images/iconsplash.png',
-                  height: 100,
-                ),
+                Image.asset('assets/images/iconsplash.png', height: 100),
                 const SizedBox(height: 30),
-                const Text(
-                  "Sign in to your account",
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                const Text("Login with Phone", style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 40),
 
-                // phone number field
+                // Phone number field
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   decoration: BoxDecoration(
                     color: const Color(0xffF5F5F5),
                     borderRadius: BorderRadius.circular(30),
                   ),
-                  child: const TextField(
+                  child: TextField(
+                    controller: phoneController,
                     keyboardType: TextInputType.phone,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       border: InputBorder.none,
                       labelText: 'Phone Number',
                       hintText: '+91 9876543210',
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
 
-                // password field
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  decoration: BoxDecoration(
-                    color: const Color(0xffF5F5F5),
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: const TextField(
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      labelText: 'Password',
-                      hintText: '******',
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 40),
 
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {},
-                    child: const Text("Forget Password?"),
-                  ),
-                ),
-
-                const SizedBox(height: 15),
-
-                // sign in button
+                // Send OTP button
                 SizedBox(
                   width: double.infinity,
                   height: 55,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xff5f9658),
+                      backgroundColor: const Color(0xFF59975C),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(35),
                       ),
                     ),
-                    onPressed: () {
-                       Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => HomeScreen(),));
-                    },
-                    child: const Text(
-                      "Sign in",
-                      style: TextStyle(fontSize: 18),
-                    ),
+                    onPressed: isLoading ? null : sendOTP,
+                    child: isLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text("Send OTP", style: TextStyle(fontSize: 18, color: Colors.white)),
                   ),
                 ),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: 70),
                 const Text("or sign in with"),
-                const SizedBox(height: 15),
-
-                // social icons
+                const SizedBox(height: 25),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -115,7 +129,6 @@ class LoginScreen extends StatelessWidget {
                     _socialButton("assets/images/twittericon.png"),
                   ],
                 ),
-
                 const SizedBox(height: 30),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -125,12 +138,9 @@ class LoginScreen extends StatelessWidget {
                       onTap: () {},
                       child: const Text(
                         "Sign Up",
-                        style: TextStyle(
-                          color: Color(0xff29773D),
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: TextStyle(color: Color(0xff29773D), fontWeight: FontWeight.bold),
                       ),
-                    )
+                    ),
                   ],
                 ),
                 const SizedBox(height: 30),
@@ -150,9 +160,7 @@ class LoginScreen extends StatelessWidget {
         color: const Color(0xffF5F5F5),
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Center(
-        child: Image.asset(img, height: 25),
-      ),
+      child: Center(child: Image.asset(img, height: 25)),
     );
   }
 }

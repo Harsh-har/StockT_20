@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'Topgainer_Screen.dart';
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -66,7 +68,10 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: ()
+                        {
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TeamSelectionScreen(),));
+                        },
                         child: const Text("+ Add Funds",
                             style: TextStyle(color: Colors.black)),
                       ),

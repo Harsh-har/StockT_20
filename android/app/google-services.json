@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "182522841200",
+    "project_id": "stock-t20",
+    "storage_bucket": "stock-t20.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:182522841200:android:eb390b4c12524c9489ccb5",
+        "android_client_info": {
+          "package_name": "com.example.yaaara"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB95EKAf7v8GDanTL6hdRpAb51vG0jNADk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
