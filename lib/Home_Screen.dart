@@ -1,9 +1,61 @@
 import 'package:flutter/material.dart';
+import 'Contest_Screen.dart';
+import 'Leaderboard_Screen.dart';
+import 'Profile_Screen.dart';   // <-- tumhari contest wali screen
 
-import 'Topgainer_Screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0;
+
+  // Pages list
+  final List<Widget> _pages = [
+    const HomePage(),         // Home tab
+    const ContestScreen(),    // Contest tab
+    const LeaderboardScreen(),// Leaderboard tab
+    const ProfileScreen(),    // Profile tab
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _pages,
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        selectedItemColor: Color(0xFF59975C),
+        unselectedItemColor: Colors.black45,
+        type: BottomNavigationBarType.fixed,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+          BottomNavigationBarItem(icon: Icon(Icons.emoji_events), label: "Contest"),
+          BottomNavigationBarItem(icon: Icon(Icons.leaderboard), label: "Leaderboard"),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
+        ],
+      ),
+    );
+  }
+}
+
+///////////////////// Home Page (tumhara purana UI) /////////////////////
+
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +64,7 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: Icon(Icons.menu, color: Colors.black),
+        leading: const Icon(Icons.menu, color: Colors.black),
         title: const Text(
           "Stock T20",
           style: TextStyle(
@@ -30,6 +82,7 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Your balance section
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
@@ -56,7 +109,7 @@ class HomeScreen extends StatelessWidget {
                       ElevatedButton(
                         onPressed: () {},
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
+                          backgroundColor: Color(0xFF59975C),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
@@ -64,14 +117,11 @@ class HomeScreen extends StatelessWidget {
                         child: const Padding(
                           padding: EdgeInsets.symmetric(
                               horizontal: 25.0, vertical: 12),
-                          child: Text("+ Join Contest"),
+                          child: Text("+ Join Contest",style: TextStyle(color: Colors.white),),
                         ),
                       ),
                       TextButton(
-                        onPressed: ()
-                        {
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TeamSelectionScreen(),));
-                        },
+                        onPressed: () {},
                         child: const Text("+ Add Funds",
                             style: TextStyle(color: Colors.black)),
                       ),
@@ -84,7 +134,6 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 30),
             const Text("Active Contests",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-
             const SizedBox(height: 10),
             SizedBox(
               height: 170,
@@ -119,21 +168,6 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.green,
-        unselectedItemColor: Colors.black45,
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.emoji_events), label: "Contest"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.leaderboard), label: "Leaderboard"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.person), label: "Profile"),
-        ],
-      ),
     );
   }
 
@@ -164,12 +198,12 @@ class HomeScreen extends StatelessWidget {
           ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
+              backgroundColor: Color(0xFF59975C),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
-            child: const Text("Join Now"),
+            child: const Text("Join Now",style: TextStyle(color: Colors.white),),
           )
         ],
       ),
@@ -213,3 +247,5 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
+
+
