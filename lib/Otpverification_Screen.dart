@@ -43,7 +43,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       // ✅ Navigate to Home on success
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
+        MaterialPageRoute(builder: (_) => const HomeDashboard()),
             (route) => false,
       );
     } catch (e) {

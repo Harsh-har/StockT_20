@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
-import 'Contest_Screen.dart';
-import 'Leaderboard_Screen.dart';
-import 'Profile_Screen.dart';   // <-- tumhari contest wali screen
+import 'package:yaaara/ChallengesScreen.dart';
+import 'package:yaaara/LeaderboardScreen.dart';
+import 'package:yaaara/Profile_Screen.dart';
+import 'CompetitonsScreen.dart';
+import 'MatchResultScreen.dart';
+import 'NotificationScreen.dart';
+import 'PaytmScreen.dart';
 
-
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class HomeDashboard extends StatefulWidget {
+  const HomeDashboard({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<HomeDashboard> createState() => _HomeDashboardState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeDashboardState extends State<HomeDashboard> {
   int _selectedIndex = 0;
 
-  // Pages list
-  final List<Widget> _pages = [
-    const HomePage(),         // Home tab
-    const ContestScreen(),    // Contest tab
-    const LeaderboardScreen(),// Leaderboard tab
-    const ProfileScreen(),    // Profile tab
+  // 🔹 Screens list for bottom nav
+  final List<Widget> _screens = [
+    const DashboardContent(),   // Home content
+    const AddFundsScreen(),     // Wallet / Add Funds
+    const CompetitionsScreen(), // Competitions
+    const ProfileScreen(),      // Profile
   ];
 
   void _onItemTapped(int index) {
@@ -31,20 +34,34 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: _pages,
+      appBar: AppBar(
+        title: const Text("Sports Olymps"),
+        backgroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => NotificationScreen()));
+            },
+          ),
+        ],
       ),
+      body: _screens[_selectedIndex],
+
+      // 🔹 Bottom Navigation Bar
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: Colors.deepPurple,
+        unselectedItemColor: Colors.grey,
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        selectedItemColor: Color(0xFF59975C),
-        unselectedItemColor: Colors.black45,
-        type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.emoji_events), label: "Contest"),
-          BottomNavigationBarItem(icon: Icon(Icons.leaderboard), label: "Leaderboard"),
+          BottomNavigationBarItem(icon: Icon(Icons.account_balance_wallet), label: "Add Funds"),
+          BottomNavigationBarItem(icon: Icon(Icons.emoji_events), label: "Competitions"),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
         ],
       ),
@@ -52,200 +69,133 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-///////////////////// Home Page (tumhara purana UI) /////////////////////
-
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+/// 🔹 Home Dashboard Content (moved out for clean structure)
+class DashboardContent extends StatelessWidget {
+  const DashboardContent({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: const Icon(Icons.menu, color: Colors.black),
-        title: const Text(
-          "Stock T20",
-          style: TextStyle(
-              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 22),
-        ),
-        centerTitle: true,
-        actions: [
-          IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.notifications_none, color: Colors.black))
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Your balance section
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.green.shade100,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text("Your Balance",
-                      style: TextStyle(fontSize: 16, color: Colors.black54)),
-                  const SizedBox(height: 8),
-                  const Text(
-                    "₹ 5,250.75",
-                    style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF59975C),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                        ),
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 25.0, vertical: 12),
-                          child: Text("+ Join Contest",style: TextStyle(color: Colors.white),),
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {},
-                        child: const Text("+ Add Funds",
-                            style: TextStyle(color: Colors.black)),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 30),
-            const Text("Active Contests",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 10),
-            SizedBox(
-              height: 170,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  contestCard("IND vs AUS", "Live", "T20 World Cup Final", "₹ 50", "25k"),
-                  const SizedBox(width: 10),
-                  contestCard("MI vs CSK", "Upcoming", "IPL Clash - Final Showdown", "₹ 70", "43k"),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 30),
-            const Text("My Teams",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 10),
-            teamTile("Check Warriors", 11, "Active"),
-            teamTile("Pitch Predators", 10, "Drafting"),
-            teamTile("Super Strikers", 11, "Active"),
-            teamTile("Boundary Blazers", 9, "Pending"),
-
-            const SizedBox(height: 30),
-            const Text("Live Leaderboard",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 10),
-            leaderboardTile(1, "Harsh Singhal", "1,200"),
-            leaderboardTile(2, "Abhishek Pundir", "1,300"),
-            leaderboardTile(3, "Kamal Sharma", "1,110"),
-            leaderboardTile(4, "Gautam Kumar", "1,120"),
-            leaderboardTile(5, "Arpit Kamboj", "1,270"),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget contestCard(String title, String status, String desc, String fee, String players) {
-    return Container(
-      width: 220,
-      padding: const EdgeInsets.all(15),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(15),
-      ),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 4),
-          Text(desc, style: const TextStyle(color: Colors.grey)),
-          const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          // 🔹 Player Info Card
+          Card(
+            shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            elevation: 4,
+            child: ListTile(
+              leading: const CircleAvatar(
+                radius: 28,
+                backgroundImage: AssetImage("assets/images/dpf.png"),
+              ),
+              title: const Text("Harsh Singhal",
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              subtitle: const Text("Rank #12 • Points: 340"),
+            ),
+          ),
+
+          const SizedBox(height: 20),
+
+          // 🔹 Quick Actions Grid
+          GridView.count(
+            crossAxisCount: 2,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
             children: [
-              Text(fee, style: const TextStyle(color: Colors.black)),
-              Text("$players 🏆", style: const TextStyle(color: Colors.orange)),
+              _dashboardButton(Icons.leaderboard, "Leaderboards", () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => LeaderboardScreen()));
+              }),
+              _dashboardButton(Icons.sports_kabaddi, "Challenges", () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ChallengesScreen()));
+              }),
+              _dashboardButton(Icons.history, "Match History", () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => MatchHistoryScreen()));
+              }),
+              _dashboardButton(Icons.emoji_events, "Competitions", () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CompetitionsScreen()));
+              }),
             ],
           ),
-          const Spacer(),
-          ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFF59975C),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+
+          const SizedBox(height: 25),
+
+          // 🔹 Live Matches Section
+          const Text("Live Matches",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 10),
+          Card(
+            color: Colors.deepPurple.shade50,
+            shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            child: ListTile(
+              leading: const Icon(Icons.sports_cricket, color: Colors.deepPurple),
+              title: const Text("Cricket: Delhi vs Mumbai"),
+              subtitle: const Text("Live Now • Watch on YouTube"),
+              trailing: ElevatedButton(
+                onPressed: () {},
+                style:
+                ElevatedButton.styleFrom(backgroundColor: Colors.white),
+                child: const Text("Watch"),
               ),
             ),
-            child: const Text("Join Now",style: TextStyle(color: Colors.white),),
-          )
+          ),
         ],
       ),
     );
   }
 
-  Widget teamTile(String teamName, int players, String status) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 6),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      child: ListTile(
-        leading: const CircleAvatar(
-          backgroundColor: Color(0xffE9FBE5),
-          child: Icon(Icons.groups, color: Color(0xff84C784)),
-        ),
-        title: Text(teamName),
-        subtitle: Text("$players Players"),
-        trailing: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: Colors.grey.shade100,
-            borderRadius: BorderRadius.circular(12),
+  Widget _dashboardButton(IconData icon, String label, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      child: Card(
+        elevation: 3,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 40, color: Colors.deepPurple),
+              const SizedBox(height: 8),
+              Text(label,
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w500)),
+            ],
           ),
-          child: Text(status, style: const TextStyle(fontSize: 12)),
         ),
       ),
-    );
-  }
-
-  Widget leaderboardTile(int rank, String name, String points) {
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: Colors.white,
-        child: Text(rank.toString(),
-            style: const TextStyle(fontWeight: FontWeight.bold)),
-      ),
-      title: Text(name),
-      trailing: Text("$points 🏆",
-          style:
-          const TextStyle(fontWeight: FontWeight.bold, color: Colors.orange)),
     );
   }
 }
 
+/// 🔹 Dummy Add Funds Screen
+class AddFundsScreen extends StatelessWidget {
+  const AddFundsScreen({super.key});
 
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: ElevatedButton(
+        child: const Text("Add ₹500 to Wallet"),
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) =>  PaytmScreen(),));
+        },
+      ),
+    );
+  }
+}
